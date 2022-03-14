@@ -1,16 +1,9 @@
-from flask import Flask
 from messages import *
+from rabbitmq_connection import channel
 #!/usr/bin/env python
 import pika
 import sys
 
-credentials = pika.PlainCredentials('admin', 'admin')
-connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host='192.168.10.55', 
-    virtual_host='/',
-    port=5672,
-    credentials=credentials))
-channel = connection.channel()
 
 # app = Flask(__name__)
 
@@ -28,8 +21,7 @@ def get_messages():
 def add_comment():
     request_data = request.get_json()
 
-channel.queue_declare(queue='task_queue', durable=True)
-
+    channel.queue_declare(queue='task_queue', durable=True)
     message = ' '.join(sys.argv[1:]) or "Hello World!"
     channel.basic_publish(
         exchange='',
