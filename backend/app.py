@@ -1,6 +1,7 @@
-from messages import *
-from rabbitmq_connection import channel
 #!/usr/bin/env python
+from messages import *
+# from rabbitmq_connection import channel
+
 import pika
 import sys
 
@@ -21,17 +22,17 @@ def get_messages():
 def add_comment():
     request_data = request.get_json()
 
-    channel.queue_declare(queue='task_queue', durable=True)
-    message = ' '.join(sys.argv[1:]) or "Hello World!"
-    channel.basic_publish(
-        exchange='',
-        routing_key='task_queue',
-        body=message,
-        properties=pika.BasicProperties(
-            delivery_mode=2,  # make message persistent
-        ))
-    print(" [x] Sent %r" % message)
-    connection.close()
+    # channel.queue_declare(queue='task_queue', durable=True)
+    # message = ' '.join(sys.argv[1:]) or "Hello World!"
+    # channel.basic_publish(
+    #     exchange='',
+    #     routing_key='task_queue',
+    #     body=message,
+    #     properties=pika.BasicProperties(
+    #         delivery_mode=2,  # make message persistent
+    #     ))
+    # print(" [x] Sent %r" % message)
+    # connection.close()
 
     Message.add_message(request_data['message'])
     response = Response('Message added', 201, mimetype='application/json')
