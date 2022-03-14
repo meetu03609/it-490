@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import axios from 'axios';
 
-const BASE_API_URL = 'http://192.168.10.55:8000';
+const BASE_API_URL = 'http://10.144.242.193.:8000';
 
 
 export default function AlignItemsList() {
@@ -29,11 +29,13 @@ export default function AlignItemsList() {
 
   const _handleKeyDown = e => {
     if (e.key === 'Enter') {
+      e.preventDefault();
       if (!newMsg)
         alert('Message is empty')
       else {
         axios.post(`${BASE_API_URL}/messages`, {message: newMsg})
         .then(res => {
+          setNewMsg('');
           fetchMessages();
         }) 
       }
@@ -49,7 +51,7 @@ export default function AlignItemsList() {
     noValidate
     autoComplete="off"
   >
-    <TextField id="outlined-basic" value={newMsg} onKeyDown={_handleKeyDown} onChange={e => setNewMsg(e.target.value)} label="Enter Message" variant="outlined" />
+    <TextField id="outlined-basic" value={newMsg} onKeyPress={_handleKeyDown} onChange={e => setNewMsg(e.target.value)} label="Enter Message" variant="outlined" />
     <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
       {messages.length <= 0 && <div>No Message</div>}
       {messages.map((message, i) => (
