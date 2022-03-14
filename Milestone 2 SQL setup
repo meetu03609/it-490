@@ -1,0 +1,9 @@
+Milestone 2 SQL setup.
+
+how to enable mysql
+#sudo systemctl start mysql
+how to see status
+#sudo systemctl status mysql
+open this url in browser:- http://localhost:3306
+username:root
+password:Root#123

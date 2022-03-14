@@ -1,0 +1,7 @@
+How to enable rabbitmq 
+sudo rabbitmq-plugins enable rabbitmq_management 
+sudo systemctl status rabbitmq-server
+How to Run
+Open http://localhost:15672 url on browser
+Username: guest
+Password: guest

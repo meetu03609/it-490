@@ -1,0 +1,19 @@
+# SQL
+// sql start 
+//make a diractory 
+mkdir darshan
+// create a file in that folder
+touch sqlstart.sh
+//writing command in the file
+vi sqlstart.sh
+// command 
+#!/bin/sh
+/etc/init.d/mysql start
+echo " sql is start"
+// create another fill to stop
+touch sqlstop.sh
+vi sqlstop.sh
+//command to stop sql
+#!/bin/sh
+/etc/init.d mysql stop
+echo " sql is stop"
