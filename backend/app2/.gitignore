@@ -1,0 +1,4 @@
+**/__pycache__
+**/*.pyc
+rest_example/migrations/0*.py
+venv/
