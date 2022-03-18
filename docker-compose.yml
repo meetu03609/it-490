@@ -38,3 +38,14 @@ services:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
       - HOST_URL=http://localhost/:3000
+
+  db:
+    container_name: database
+    image: postgres
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+      - POSTGRES_DB=app
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=supersecretpassword
+    expose:
+      - 5432
