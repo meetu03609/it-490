@@ -15,3 +15,5 @@ app.config['JWT_SECRET_KEY'] = 'Dude!WhyShouldYouEncryptIt'
 app.config['JWT_BLACKLIST_ENABLED'] = True
 
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
+
+db = SQLAlchemy(app)
