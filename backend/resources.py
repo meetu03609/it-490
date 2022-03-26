@@ -12,6 +12,7 @@ from flask_jwt_extended import (
 )
 
 import pdb
+from send import sendMessageToRM
 
 
 parser = reqparse.RequestParser()
@@ -54,6 +55,8 @@ class UserRegistration(Resource):
             
             refresh_token = create_refresh_token(identity=username)
 
+            sendMessageToRM(f'User {username} was created')
+
             return {
             
                 'message': f'User {username} was created',
@@ -95,7 +98,7 @@ class UserLogin(Resource):
             access_token = create_access_token(identity=username)
         
             refresh_token = create_refresh_token(identity=username)
-        
+            sendMessageToRM( f'Logged in as {username}')
             return {
                 'message': f'Logged in as {username}',
                 'access_token': access_token,
