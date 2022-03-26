@@ -90,24 +90,20 @@ export default function SignUp() {
 
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
-  const timer = React.useRef();
+  // const timer = React.useRef();
 
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success,
   });
 
   const [form, setForm] = useState({
-    firstName: '',
-    lastName: '',
-    name: '',
+    username: '',
     email: '',
     password: ''
   });
 
   const [errors, setErrors] = useState({
-    firstName: '',
-    lastName: '',
-    name: '',
+    username: '',
     email: '',
     password: ''
   });
@@ -116,9 +112,7 @@ export default function SignUp() {
     form[target.name] = target.value;
     setForm({...form});
     setErrors({
-      firstName: '',
-      lastName: '',
-      name: '',
+      username: '',
       email: '',
       password: ''
     });
@@ -127,28 +121,10 @@ export default function SignUp() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    //  let firstName = validate('First Name', form.firstName, FIELD_TYPES.TEXT, true);
-    //
-    // if (!firstName.status) {
-    //   errors.firstName = firstName.message;
-    //   setErrors({...errors});
-    //   return false;
-    // }
-    //
-    //  let lastName = validate('Last Name', form.lastName, FIELD_TYPES.TEXT, true);
-    //
-    // if (!lastName.status) {
-    //   errors.lastName = lastName.message;
-    //   setErrors({...errors});
-    //   return false;
-    // }
+    let username = validate('User Name', form.username, FIELD_TYPES.TEXT, true);
 
-
-
-    let name = validate('User Name', form.name, FIELD_TYPES.TEXT, true);
-
-    if (!name.status) {
-      errors.name = name.message;
+    if (!username.status) {
+      errors.username = username.message;
       setErrors({...errors});
       return false;
     }
@@ -170,7 +146,7 @@ export default function SignUp() {
     if (!loading) {
       setSuccess(false);
       setLoading(true);
-      axios.post(`${CONFIG.API_BASE_URL}/user/create/`, form)
+      axios.post(`${CONFIG.API_BASE_URL}/registration`, form)
           .then(({data}) => {
             console.log(data)
             setSuccess(true);
@@ -211,13 +187,13 @@ export default function SignUp() {
                 margin="normal"
                 required
                 fullWidth
-                id="name"
+                id="username"
                 label="User Name"
-                name="name"
-                value={form.name}
+                name="username"
+                value={form.username}
                 onChange={updateForm}
-                error={!!errors.name}
-                helperText={errors.name}
+                error={!!errors.username}
+                helperText={errors.username}
             />
             <TextField
                 variant="outlined"

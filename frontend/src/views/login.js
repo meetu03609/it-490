@@ -61,12 +61,12 @@ export default function SignIn(props) {
     }, [context.user]);
 
     const [form, setForm] = useState({
-        email: '',
+        username: '',
         password: ''
     });
 
     const [errors, setErrors] = useState({
-        email: '',
+        username: '',
         password: ''
     });
 
@@ -75,7 +75,7 @@ export default function SignIn(props) {
         form[target.name] = target.value;
         setForm({...form});
         setErrors({
-            email: '',
+            username: '',
             password: ''
         });
     };
@@ -83,10 +83,10 @@ export default function SignIn(props) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        let email = validate('Email', form.email, FIELD_TYPES.EMAIL, true);
+        let username = validate('User Name', form.username, FIELD_TYPES.TEXT, true);
 
-        if (!email.status) {
-            errors.email = email.message;
+        if (!username.status) {
+            errors.username = username.message;
             setErrors({...errors});
             return false;
         }
@@ -97,17 +97,17 @@ export default function SignIn(props) {
             return false;
         }
 
-        axios.post(`${CONFIG.API_BASE_URL}/user/token/`, form)
+        axios.post(`${CONFIG.API_BASE_URL}/login`, form)
             .then(({data}) => {
-                if (data.token) {
-                    axios.get(`${CONFIG.API_BASE_URL}/user/me/`,
-                        { 'headers': { 'Authorization': `Token ${data.token}` }})
-                        .then(res => {
-                            localStorage.setItem('token', data.token);
-                            localStorage.setItem('User', JSON.stringify(res.data));
-                            context.handleUpdateMainState({user: res.data});
-                            navigate(props, '/');
-                        });
+                if (data.access_token) {
+                    localStorage.setItem('token', data.access_token);
+                    localStorage.setItem('User', JSON.stringify(data.user));
+                    context.handleUpdateMainState({user: data.user});
+                    navigate(props, '/');
+                } else {
+                    errors.username = data.username;
+                    errors.password = data.password;
+                    setErrors({...errors})
                 }
             })
             .catch(error => {
@@ -141,14 +141,14 @@ export default function SignIn(props) {
                         margin="normal"
                         required
                         fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
+                        id="username"
+                        label="User Name"
+                        name="username"
                         autoFocus
-                        value={form.email}
+                        value={form.username}
                         onChange={updateForm}
-                        error={!!errors.email}
-                        helperText={errors.email}
+                        error={!!errors.username}
+                        helperText={errors.username}
                     />
                     <TextField
                         variant="outlined"
