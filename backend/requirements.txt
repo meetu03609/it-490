@@ -1,6 +1,11 @@
-Flask==2.0.3
-pika==1.2.0
-pipreqs==0.4.11
-SQLAlchemy==1.4.32
+Flask
+Flask-JWT-Extended
+Flask-RESTful
+Flask-SqlAlchemy
+passlib
+PyJWT
+pytz
+six
+SQLAlchemy
+Werkzeug
 pymysql==1.0.2
-Flask-SQLAlchemy==2.5.1

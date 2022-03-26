@@ -1,50 +1,50 @@
-#!/usr/bin/env python
-from messages import *
-# from rabbitmq_connection import channel
+from flask import Flask
 
-import pika
-import sys
+from flask_restful import Api
 
+from flask_sqlalchemy import SQLAlchemy
 
-# app = Flask(__name__)
+from flask_jwt_extended import JWTManager
+from settings import db, app
 
-@app.route('/')
-def home():
-    return 'Backend api'
+# Object of Api class
+api = Api(app)
 
+# SqlAlchemy object
+db = SQLAlchemy(app)
 
-@app.route('/messages', methods=['GET'])
-def get_messages():
-    return jsonify({'Messages': Message.get_all_messages()})
+# JwtManager object
+jwt = JWTManager(app)
 
+# Generating tables before first request is fetched
+@app.before_first_request
+def create_tables():
 
-@app.route('/messages', methods=['POST'])
-def add_comment():
-    request_data = request.get_json()
+    db.create_all()
 
-    # channel.queue_declare(queue='task_queue', durable=True)
-    # message = ' '.join(sys.argv[1:]) or "Hello World!"
-    # channel.basic_publish(
-    #     exchange='',
-    #     routing_key='task_queue',
-    #     body=message,
-    #     properties=pika.BasicProperties(
-    #         delivery_mode=2,  # make message persistent
-    #     ))
-    # print(" [x] Sent %r" % message)
-    # connection.close()
+# Checking that token is in blacklist or not
+@jwt.token_in_blocklist_loader
+def check_if_token_in_blacklist(decrypted_token):
 
-    Message.add_message(request_data['message'])
-    response = Response('Message added', 201, mimetype='application/json')
-    return response
+    jti = decrypted_token['jti']
 
-@app.route('/messages/<int:id>')
-def remove_message(id):
+    return models.RevokedTokenModel.is_jti_blacklisted(jti)
 
-    Message.delete_message(id)
-    response = Response('Message deleted', status=200, mimetype='application/json')
-    return response
+# Importing models and resources
+import models, resources
 
+# Api Endpoints
 
-if __name__ == "__main__":
-    app.run(port=8000, debug=True, host='0.0.0.0')
+api.add_resource(resources.UserRegistration, '/api/registration')
+
+api.add_resource(resources.UserLogin, '/api/login')
+
+api.add_resource(resources.UserLogoutAccess, '/logout/access')
+
+api.add_resource(resources.UserLogoutRefresh, '/logout/refresh')
+
+api.add_resource(resources.TokenRefresh, '/token/refresh')
+
+api.add_resource(resources.AllUsers, '/users')
+
+api.add_resource(resources.SecretResource, '/secret')
