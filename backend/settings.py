@@ -1,10 +1,13 @@
 from flask import Flask, request, Response, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
 
 # Application Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@127.0.0.1:3306/it490'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@10.144.171.181:3306/it490'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

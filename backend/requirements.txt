@@ -10,3 +10,4 @@ SQLAlchemy
 Werkzeug
 pymysql==1.0.2
 pika
+flask-cors

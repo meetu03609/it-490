@@ -16,6 +16,10 @@ db = SQLAlchemy(app)
 # JwtManager object
 jwt = JWTManager(app)
 
+@app.route('/')
+def home():
+    return 'Backen api is running'
+
 # Generating tables before first request is fetched
 @app.before_first_request
 def create_tables():
