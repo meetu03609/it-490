@@ -10,10 +10,12 @@ import Menu from '@material-ui/core/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import clsx from 'clsx';
 import {api} from "../../utils/request";
 import MainContext from "../../context/main-context";
 import {navigate} from "../../utils/services";
+import Button from '@material-ui/core/Button';
+import { withRouter } from "react-router-dom";
+
 const axios = require("axios").default;
 const drawerWidth = 240;
 
@@ -97,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function PrimarySearchAppBar(props) {
+function PrimarySearchAppBar(props) {
     const context = useContext(MainContext);
     const [open, setOpen] = React.useState(true);
     const [keyword, setKeyword] = React.useState('');
@@ -235,6 +237,10 @@ export default function PrimarySearchAppBar(props) {
             })
     }
 
+    const handleAddButton = () => {
+        navigate(props, props.edit ? '/home' :'create-product')
+    }
+
     return (
         <div className={classes.grow}>
             <AppBar
@@ -271,6 +277,7 @@ export default function PrimarySearchAppBar(props) {
                         />
                     </div>
                     <div className={classes.grow} />
+                    <Button onClick={handleAddButton} variant="contained">{props.edit ? 'List Product' : 'Add Product'}</Button>
                     <div className={classes.sectionDesktop}>
                         <IconButton
                             edge="end"
@@ -301,3 +308,5 @@ export default function PrimarySearchAppBar(props) {
         </div>
     );
 }
+
+export default withRouter(PrimarySearchAppBar);

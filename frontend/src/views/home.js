@@ -1,33 +1,19 @@
-import React, {useContext, useEffect} from 'react';
-import AppBar from '@material-ui/core/AppBar';
+import React, {useContext, useEffect, useState} from 'react';
 import Button from '@material-ui/core/Button';
-import CameraIcon from '@material-ui/icons/PhotoCamera';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import Card from '@material-ui/core/Card';
-// import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Link from '@material-ui/core/Link';
 import MainContext from './../context/main-context';
 import Layout from "../hoc/Layout";
-
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+import {CardActions} from "@material-ui/core";
+import axios from "axios";
+import {CONFIG} from "../config";
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -61,10 +47,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const cards = [1];
 
 export default function Home(props) {
     const classes = useStyles();
+    const [products, setProducts] = useState();
     const context = useContext(MainContext);
 
     useEffect(() => {
@@ -72,62 +58,64 @@ export default function Home(props) {
             props.history.push('/login')
     }, [context.user]);
 
+    useEffect(() => {
+        fetProducts();
+    }, [])
+
+    const fetProducts = () => {
+        axios.get(`${CONFIG.API_BASE_URL}/product/list`)
+            .then(res => {
+                setProducts(res.data.products)
+            })
+    }
+
+    const handleDelete = (id) => {
+        axios.delete(`${CONFIG.API_BASE_URL}/product/delete/${id}`)
+            .then(() => {
+                fetProducts();
+            })
+    }
+
     return (
         <Layout>
                 {/* Hero unit */}
                 <div className={classes.heroContent}>
                     <Container maxWidth="sm">
                         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-                            Landing Page
+                            Indian Spices
                         </Typography>
                         <Typography variant="h5" align="center" color="textSecondary" paragraph>
-                            Something short and leading about the collection below—its contents, the creator, etc.
-                            Make it short and sweet, but not too short so folks don&apos;t simply skip over it
-                            entirely.
+                            No other country grows and consumes as many spices as in India.
                         </Typography>
-                        <div className={classes.heroButtons}>
-                            <Grid container spacing={2} justifyContent="center">
-                                <Grid item>
-                                    <Button variant="contained" color="primary">
-                                        Main call to action
-                                    </Button>
-                                </Grid>
-                                <Grid item>
-                                    <Button variant="outlined" color="primary">
-                                        Secondary action
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </div>
                     </Container>
                 </div>
                 <Container className={classes.cardGrid} maxWidth="md">
                     {/* End hero unit */}
                     <Grid container spacing={4}>
-                        {cards.map((card) => (
+                        {products && products.map((card) => (
                             <Grid item key={card} xs={12} sm={6} md={4}>
                                 <Card className={classes.card}>
                                     <CardMedia
                                         className={classes.cardMedia}
                                         image="https://source.unsplash.com/random"
-                                        title="Image title"
+                                        title={card.title}
                                     />
                                     <CardContent className={classes.cardContent}>
                                         <Typography gutterBottom variant="h5" component="h2">
-                                            Heading
+                                            {card.title}
                                         </Typography>
                                         <Typography>
-                                            This is a media card. You can use this section to describe the content.
+                                            {card.description}
                                         </Typography>
                                     </CardContent>
-                                    {/*<CardActions>*/}
-                                    {/*    <Button size="small" color="primary">*/}
-                                    {/*        View*/}
-                                    {/*    </Button>*/}
-                                    {/*    <Button size="small" color="primary">*/}
-                                    {/*        Edit*/}
-                                    {/*    </Button>*/}
-                                    {/*</CardActions>*/}
+                                    <CardActions>
+                                        <Button onClick={() => handleDelete(card.id)} startIcon={<DeleteIcon />} size="small" color="secondary">
+                                            Delete
+                                        </Button>
+                                        {/*<Button size="small" color="primary" startIcon={<EditIcon />}>*/}
+                                        {/*    Edit*/}
+                                        {/*</Button>*/}
+                                    </CardActions>
                                 </Card>
                             </Grid>
                         ))}

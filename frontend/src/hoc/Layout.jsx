@@ -9,7 +9,7 @@ const Layout = props => {
     return (
         <React.Fragment>
             <CssBaseline />
-            <PrimarySearchAppBar/>
+            <PrimarySearchAppBar edit={props.edit}/>
             {/*<AppDrawer/>*/}
             <main>
                 {props.children}
