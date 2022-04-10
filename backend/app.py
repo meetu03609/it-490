@@ -35,11 +35,17 @@ def check_if_token_in_blacklist(decrypted_token):
     return models.RevokedTokenModel.is_jti_blacklisted(jti)
 
 # Importing models and resources
-import models, resources
+import models, resources, product_resources
 
 # Api Endpoints
 
 api.add_resource(resources.UserRegistration, '/api/registration')
+
+api.add_resource(product_resources.ProductForm, '/api/product/create')
+
+api.add_resource(product_resources.AllProduct, '/api/product/list')
+
+api.add_resource(product_resources.DeleteProduct, '/api/product/delete/<int:id>')
 
 api.add_resource(resources.UserLogin, '/api/login')
 

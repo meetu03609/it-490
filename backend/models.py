@@ -99,3 +99,54 @@ class RevokedTokenModel(db.Model):
         query = cls.query.filter_by(jti=jti).first()
     
         return bool(query)
+
+
+class ProductModel(db.Model):
+    """
+    Product Model Class
+    """
+
+    __tablename__ = 'products'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(120), unique=True, nullable=False)
+    description = db.Column(db.String(120), nullable=False)
+    price = db.Column(db.String(120), nullable=True)
+    """
+    Save user details in Database
+    """
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+    """
+    Find user by username
+    """
+    @classmethod
+    def find_by_title(cls, title):
+        return cls.query.filter_by(title=title).first()
+    """
+    return all the user data in json form available in DB
+    """
+    @classmethod
+    def return_all(cls):
+        def to_json(x):
+            return {
+                'id': x.id,
+                'title': x.title,
+                'description': x.description,
+                'price': x.price,
+            }
+        return {'products': [to_json(product) for product in ProductModel.query.all()]}
+
+    """
+    Delete user data
+    """
+    @classmethod
+    def delete(cls, id):
+        try:
+            ProductModel.query.filter_by(id=id).delete()
+            db.session.commit()
+            return {'message': f'{id} row(s) deleted'}
+
+        except:
+
+            return {'message': 'Something went wrong'}
