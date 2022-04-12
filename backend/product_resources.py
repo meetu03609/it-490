@@ -37,7 +37,7 @@ class ProductForm(Resource):
             title=title,
             description=description,
             price=price,
-            image=image,
+#             image=image,
         )
 
         try:
