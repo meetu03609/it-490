@@ -1,6 +1,8 @@
 from flask_restful import Resource, reqparse
 from flask import jsonify, request
-
+from PIL import Image
+from base64 import b64decode
+from io import BytesIO
 from models import ProductModel
 
 from send import sendMessageToRM
@@ -27,6 +29,9 @@ class ProductForm(Resource):
         description = data['description']
         price = data['price']
         image = data['image']
+
+        im = Image.open(BytesIO(b64decode(image.split(',')[1])))
+        im.save("image.png")
 
         # Checking that user is already exist or not
         if ProductModel.find_by_title(title):
