@@ -11,6 +11,7 @@ parser = reqparse.RequestParser()
 parser.add_argument('title', help='title cannot be blank', required=True)
 parser.add_argument('description', help='description cannot be blank', required=True)
 parser.add_argument('price', help='price cannot be blank', required=True)
+parser.add_argument('image')
 
 
 class ProductForm(Resource):
