@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from flask import jsonify
+from flask import jsonify, request
 
 from models import ProductModel
 
@@ -25,6 +25,7 @@ class ProductForm(Resource):
         title = data['title']
         description = data['description']
         price = data['price']
+        image = data['image']
 
         # Checking that user is already exist or not
         if ProductModel.find_by_title(title):
@@ -35,6 +36,7 @@ class ProductForm(Resource):
             title=title,
             description=description,
             price=price,
+            image=image,
         )
 
         try:
@@ -59,7 +61,8 @@ class AllProduct(Resource):
         """
         return all products api
         """
-        return ProductModel.return_all()
+        search = request.args.get('search')
+        return ProductModel.return_all(search)
 
 
 class DeleteProduct(Resource):

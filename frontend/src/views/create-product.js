@@ -101,13 +101,15 @@ export default function CreateProduct() {
   const [form, setForm] = useState({
     title: '',
     description: '',
-    price: ''
+    price: '',
+    image: ''
   });
 
   const [errors, setErrors] = useState({
     title: '',
     description: '',
-    price: ''
+    price: '',
+    image: ''
   });
 
   const updateForm = ({target}) => {
@@ -116,7 +118,8 @@ export default function CreateProduct() {
     setErrors({
       title: '',
       description: '',
-      price: ''
+      price: '',
+      image: ''
     });
   };
 
@@ -229,7 +232,38 @@ export default function CreateProduct() {
                   error={!!errors.price}
                   helperText={errors.price}
               />
+              <input
+                  accept="image/*"
+                  className="hidden"
+                  id="button-file"
+                  type="file"
+                  onChange={async e => {
+                    function readFileAsync() {
+                      return new Promise((resolve, reject) => {
+                        const file = e.target.files[0];
+                        if (!file) {
+                          return;
+                        }
+                        const reader = new FileReader();
 
+                        reader.onload = () => {
+                          resolve({
+                            title: file.name,
+                            url: `data:${file.type};base64,${btoa(reader.result)}`,
+                            type: 'image'
+                          });
+                        };
+
+                        reader.onerror = reject;
+
+                        reader.readAsBinaryString(file);
+                      });
+                    }
+
+                    const newImage = await readFileAsync();
+                    updateForm({target: {name: 'image', value: newImage.url}})
+                  }}
+              />
               <div className={classes.root}>
                 <div className={classes.wrapper}>
                   <Fab

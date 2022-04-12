@@ -34,7 +34,7 @@ class UserModel(db.Model):
             return {
                 'username': x.username,
                 'password': x.password,
-                'email': x.email,
+                'email': x.email
             }
         return {'users': [to_json(user) for user in UserModel.query.all()]}
 
@@ -111,6 +111,7 @@ class ProductModel(db.Model):
     title = db.Column(db.String(120), unique=True, nullable=False)
     description = db.Column(db.String(120), nullable=False)
     price = db.Column(db.String(120), nullable=True)
+    image = db.Column(db.String(120))
     """
     Save user details in Database
     """
@@ -127,15 +128,19 @@ class ProductModel(db.Model):
     return all the user data in json form available in DB
     """
     @classmethod
-    def return_all(cls):
+    def return_all(cls, search):
         def to_json(x):
             return {
                 'id': x.id,
                 'title': x.title,
                 'description': x.description,
                 'price': x.price,
+                'image': x.image
             }
-        return {'products': [to_json(product) for product in ProductModel.query.all()]}
+        if search:
+            return {'products': [to_json(product) for product in ProductModel.query.filter(ProductModel.title.like("%{}%".format(search))).all()]}
+        else:
+            return {'products': [to_json(product) for product in ProductModel.query.all()]}
 
     """
     Delete user data

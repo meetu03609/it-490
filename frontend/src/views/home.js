@@ -50,13 +50,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home(props) {
     const classes = useStyles();
-    const [products, setProducts] = useState();
-    const context = useContext(MainContext);
+    // const [products, setProducts] = useState();
+    const {products, user, handleUpdateMainState} = useContext(MainContext);
 
     useEffect(() => {
-        if (!context.user)
+        if (!user)
             props.history.push('/login')
-    }, [context.user]);
+    }, [user]);
 
     useEffect(() => {
         fetProducts();
@@ -65,7 +65,7 @@ export default function Home(props) {
     const fetProducts = () => {
         axios.get(`${CONFIG.API_BASE_URL}/product/list`)
             .then(res => {
-                setProducts(res.data.products)
+                handleUpdateMainState({products: res.data.products});
             })
     }
 

@@ -15,6 +15,7 @@ import MainContext from "../../context/main-context";
 import {navigate} from "../../utils/services";
 import Button from '@material-ui/core/Button';
 import { withRouter } from "react-router-dom";
+import {CONFIG} from "../../config";
 
 const axios = require("axios").default;
 const drawerWidth = 240;
@@ -100,8 +101,8 @@ const useStyles = makeStyles((theme) => ({
 
 
 function PrimarySearchAppBar(props) {
-    const context = useContext(MainContext);
-    const [open, setOpen] = React.useState(true);
+    const {handleUpdateMainState} = useContext(MainContext);
+    // const [open, setOpen] = React.useState(true);
     const [keyword, setKeyword] = React.useState('');
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -133,7 +134,7 @@ function PrimarySearchAppBar(props) {
 
     const handleLogout = () => {
         localStorage.clear();
-        context.handleUpdateMainState({user: null});
+        handleUpdateMainState({user: null});
     }
 
     const menuId = 'primary-search-account-menu';
@@ -179,62 +180,11 @@ function PrimarySearchAppBar(props) {
 
     const handleKeyPress = (e) => {
         if(e.keyCode === 13){
-            const options = {
-                method: 'GET',
-                url: 'https://amazon-product-reviews-keywords.p.rapidapi.com/product/search',
-                params: {keyword: e.target.value, category: 'aps', country: 'US'},
-                headers: {
-                    'x-rapidapi-key': 'a63dca9f08msh09539df4e2ab02bp112a4djsn44d5666aeb47',
-                    'x-rapidapi-host': 'amazon-product-reviews-keywords.p.rapidapi.com'
-                }
-            };
-
-            axios.request(options).then(function (response) {
-                if (response.data && response.data.products && response.data.products.length) {
-                    response.data.products.forEach(d => {
-                        let product = {
-                            asin: d.asin,
-                            title: d.title,
-                            score: d.score,
-                            sponsored: d.sponsored,
-                            amazon_choice: d.amazon_choice,
-                            amazon_prime: d.amazon_prime,
-                            price: d.price.current_price,
-                            before_price: d.price.before_price,
-                            current_price: d.price.current_price,
-                            currency: d.price.currency,
-                            rating: d.reviews.rating,
-                            total_reviews: d.reviews.total_reviews,
-                            discounted: d.discounted,
-                            url: d.uri,
-                            thumbnail: d.thumbnail,
-                        };
-
-                        const isFoundProduct = context.products.findIndex(p => p.asin === product.asin);
-                        if (isFoundProduct === -1)
-                            createProduct(product);
-                    })
-
-                }
-                fetchProducts();
-            }).catch(function (error) {
-                console.error(error);
-            });
+            axios.get(`${CONFIG.API_BASE_URL}/product/list?search=${keyword}`)
+                .then(res => {
+                    handleUpdateMainState({products: res.data.products});
+                })
         }
-    }
-
-    const createProduct = (product) => {
-        api('/product/products/', 'POST', product)
-            .then(res => {
-                console.log('res', res.data);
-            })
-    };
-
-    const fetchProducts = () => {
-        api('/product/products/', 'GET')
-            .then(res => {
-                context.handleUpdateMainState({products: res.data});
-            })
     }
 
     const handleAddButton = () => {
