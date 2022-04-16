@@ -14,6 +14,7 @@ parser.add_argument('title', help='title cannot be blank', required=True)
 parser.add_argument('description', help='description cannot be blank', required=True)
 parser.add_argument('price', help='price cannot be blank', required=True)
 parser.add_argument('image')
+parser.add_argument('imageName')
 
 
 class ProductForm(Resource):
@@ -29,9 +30,10 @@ class ProductForm(Resource):
         description = data['description']
         price = data['price']
         image = data['image']
+        imageName = data['imageName']
 
         im = Image.open(BytesIO(b64decode(image.split(',')[1])))
-        im.save("image.png")
+        im.save("static/" + imageName)
 
         # Checking that user is already exist or not
         if ProductModel.find_by_title(title):
@@ -42,7 +44,7 @@ class ProductForm(Resource):
             title=title,
             description=description,
             price=price,
-#             image=image,
+            image=imageName,
         )
 
         try:

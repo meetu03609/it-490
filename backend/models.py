@@ -111,7 +111,7 @@ class ProductModel(db.Model):
     title = db.Column(db.String(120), unique=True, nullable=False)
     description = db.Column(db.String(120), nullable=False)
     price = db.Column(db.String(120), nullable=True)
-    image = db.Column(db.String(120))
+    image = db.Column(db.String(120), nullable=True)
     """
     Save user details in Database
     """
@@ -135,7 +135,7 @@ class ProductModel(db.Model):
                 'title': x.title,
                 'description': x.description,
                 'price': x.price,
-                'image': x.image
+                'image': 'static/'+x.image
             }
         if search:
             return {'products': [to_json(product) for product in ProductModel.query.filter(ProductModel.title.like("%{}%".format(search))).all()]}

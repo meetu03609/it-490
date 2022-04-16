@@ -97,7 +97,7 @@ export default function Home(props) {
                                 <Card className={classes.card}>
                                     <CardMedia
                                         className={classes.cardMedia}
-                                        image="https://source.unsplash.com/random"
+                                        image={`${CONFIG.API_BASE_URL0}${card.image}`}
                                         title={card.title}
                                     />
                                     <CardContent className={classes.cardContent}>

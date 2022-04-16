@@ -261,7 +261,8 @@ export default function CreateProduct() {
                     }
 
                     const newImage = await readFileAsync();
-                    updateForm({target: {name: 'image', value: newImage.url}})
+                    updateForm({target: {name: 'image', value: newImage.url}});
+                    updateForm({target: {name: 'imageName', value: newImage.title}});
                   }}
               />
               <div className={classes.root}>
