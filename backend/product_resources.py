@@ -52,7 +52,7 @@ class ProductForm(Resource):
             # Saving user in DB and Generating Access and Refresh token
             new_product.save_to_db()
 
-#             sendMessageToRM(f'Product {title} was created')
+            sendMessageToRM(f'Product {title} was created')
 
             return {
                 'message': f'Product {title} was created',
