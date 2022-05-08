@@ -1,4 +1,4 @@
-#!/home/shehzad/Desktop/code/it-490/backend/venv/bin/python3
+#!/home/avnesh/Desktop/it-490/backend/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

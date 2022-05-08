@@ -8,7 +8,7 @@ CORS(app)
 app.debug = True
 
 # Application Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@127.0.0.1:3306/it490'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@10.144.230.120:3306/it490'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
