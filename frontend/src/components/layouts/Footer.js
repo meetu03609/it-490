@@ -1,7 +1,10 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import MainContext from "../../context/main-context";
 
 function Copyright() {
   return (

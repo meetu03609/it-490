@@ -11,6 +11,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import StarRatings from 'react-star-ratings';
+import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles((theme) => ({
   markdown: {
@@ -41,18 +42,76 @@ export default function Main(props) {
             name='rating'
             isSelectable={false}
         />
+        {/*<Typography variant="h6" gutterBottom>*/}
+        {/*    User Rating: {'N/A'}*/}
+        {/*</Typography>*/}
+        {/*<StarRatings*/}
+        {/*    rating={parseFloat(item.imdbRating)}*/}
+        {/*    starRatedColor="blue"*/}
+        {/*    starDimension="40px"*/}
+        {/*    changeRating={() => {}}*/}
+        {/*    numberOfStars={10}*/}
+        {/*    name='rating'*/}
+        {/*    isSelectable={false}*/}
+        {/*/>*/}
+
         <Typography variant="h6" gutterBottom>
-            User Rating: {'N/A'}
+            Watch Now
         </Typography>
-        <StarRatings
-            rating={parseFloat(item.imdbRating)}
-            starRatedColor="blue"
-            starDimension="40px"
-            changeRating={() => {}}
-            numberOfStars={10}
-            name='rating'
-            isSelectable={false}
-        />
+
+        <List className={classes.root}>
+            {(props.watch && props.watch.netflix) && (
+                <ListItem alignItems="flex-start">
+                    <ListItemText
+                        primary="Netflix"
+                        secondary={
+                            <React.Fragment>
+                                <Link
+                                    href={props.watch.netflix.url} target="__blank"
+                                >
+                                    {props.watch.netflix.url}
+                                </Link>
+                            </React.Fragment>
+                        }
+                    />
+                </ListItem>
+            )}
+
+            {(props.watch && props.watch.allMovie) && (
+                <ListItem alignItems="flex-start">
+                    <ListItemText
+                        primary="All Movie"
+                        secondary={
+                            <React.Fragment>
+                                <Link
+                                    href={props.watch.allMovie.url} target="__blank"
+                                >
+                                    {props.watch.allMovie.url}
+                                </Link>
+                            </React.Fragment>
+                        }
+                    />
+                </ListItem>
+            )}
+
+            {(props.watch && props.watch.theMovieDb) && (
+                <ListItem alignItems="flex-start">
+                    <ListItemText
+                        primary="The Movie DB"
+                        secondary={
+                            <React.Fragment>
+                                <Link
+                                    href={props.watch.theMovieDb.url} target="__blank"
+                                >
+                                    {props.watch.theMovieDb.url}
+                                </Link>
+                            </React.Fragment>
+                        }
+                    />
+                </ListItem>
+            )}
+
+        </List>
 
         <Typography variant="h6" gutterBottom>
             Comments

@@ -7,6 +7,7 @@ import Blog from "../blog/Blog";
 import {movieDetailApi} from "../utils/methods";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -47,6 +48,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Detail(props) {
     const [item, setItem] = useState();
+    const [trailer, setTrailer] = useState();
+    const [watch, setWatch] = useState();
     const classes = useStyles();
     const {user, loading, handleUpdateMainState} = useContext(MainContext);
 
@@ -62,13 +65,18 @@ export default function Detail(props) {
     const fetProductDetail = () => {
         handleUpdateMainState({loading: true});
         movieDetailApi(props.match.params.id).then(function (res) {
-            console.log(res.data);
+            axios.get(`https://imdb-api.com/en/API/Trailer/k_s0266grf/${props.match.params.id}`).then(res => {
+                setTrailer(res.data)
+            });
+
+            axios.get(`https://imdb-api.com/en/API/ExternalSites/k_s0266grf/${props.match.params.id}`).then(res => {
+                setWatch(res.data)
+            });
             setItem(res.data);
         }).catch(function (error) {
             console.error(error);
         }).finally(() => {
             handleUpdateMainState({loading: false});
-
         });
     }
 
@@ -76,7 +84,7 @@ export default function Detail(props) {
         <Layout>
             {/* Hero unit */}
             <Container className={classes.cardGrid} maxWidth="md">
-               <Blog item={item}/>
+               <Blog watch={watch} trailer={trailer} item={item}/>
             </Container>
             <Backdrop className={classes.backdrop} open={loading} >
                 <CircularProgress color="inherit" />

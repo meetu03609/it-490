@@ -185,10 +185,13 @@ function PrimarySearchAppBar(props) {
 
     const handleKeyPress = (e) => {
         if(e.keyCode === 13){
+            handleUpdateMainState({loading: true});
             movieApi(keyword).then(function (res) {
                 handleUpdateMainState({products: res.data.Search});
             }).catch(function (error) {
                 console.error(error);
+            }).finally(() => {
+                handleUpdateMainState({loading: false});
             });
         }
     }

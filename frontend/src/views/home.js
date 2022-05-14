@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     },
     heroContent: {
         backgroundColor: theme.palette.background.paper,
-        padding: theme.spacing(8, 0, 6),
+        padding: theme.spacing(4, 0, 4),
     },
     heroButtons: {
         marginTop: theme.spacing(4),
@@ -44,16 +44,12 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.background.paper,
         padding: theme.spacing(6),
     },
-    backdrop: {
-        zIndex: theme.zIndex.drawer + 1,
-        color: '#fff',
-    },
 }));
 
 
 export default function Home(props) {
     const classes = useStyles();
-    const {products, user, handleUpdateMainState, count, page, keyword, loading} = useContext(MainContext);
+    const {products, user, handleUpdateMainState, count, page, keyword} = useContext(MainContext);
 
     useEffect(() => {
         if (!user)
@@ -83,10 +79,10 @@ export default function Home(props) {
                 <div className={classes.heroContent}>
                     <Container maxWidth="sm">
                         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-                            Indian Spices
+                            Movie 36
                         </Typography>
                         <Typography variant="h5" align="center" color="textSecondary" paragraph>
-                            No other country grows and consumes as many spices as in India.
+                            Movies encyclopedia.
                         </Typography>
                     </Container>
                 </div>
@@ -117,10 +113,6 @@ export default function Home(props) {
                         <Pagination onChange={(e, value) => fetProducts(value)} page={page} count={parseInt(count/10)} color="primary" />
                     </div>
                 </Container>
-
-            <Backdrop className={classes.backdrop} open={loading} >
-                <CircularProgress color="inherit" />
-            </Backdrop>
         </Layout>
     );
 }
