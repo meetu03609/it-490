@@ -16,6 +16,7 @@ import {navigate} from "../../utils/services";
 import Button from '@material-ui/core/Button';
 import { withRouter } from "react-router-dom";
 import {CONFIG} from "../../config";
+import {movieApi} from "../../utils/methods";
 
 const axios = require("axios").default;
 const drawerWidth = 240;
@@ -101,16 +102,20 @@ const useStyles = makeStyles((theme) => ({
 
 
 function PrimarySearchAppBar(props) {
-    const {handleUpdateMainState} = useContext(MainContext);
+    const {handleUpdateMainState, keyword, count} = useContext(MainContext);
     // const [open, setOpen] = React.useState(true);
-    const [keyword, setKeyword] = React.useState('');
+    // const [keyword, setKeyword] = React.useState('');
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
     useEffect(() => {
         // fetchProducts();
-    }, [])
+    }, []);
+
+    const setKeyword = (keyword) => {
+        handleUpdateMainState({keyword});
+    }
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -180,10 +185,11 @@ function PrimarySearchAppBar(props) {
 
     const handleKeyPress = (e) => {
         if(e.keyCode === 13){
-            axios.get(`${CONFIG.API_BASE_URL}/product/list?search=${keyword}`)
-                .then(res => {
-                    handleUpdateMainState({products: res.data.products});
-                })
+            movieApi(keyword).then(function (res) {
+                handleUpdateMainState({products: res.data.Search});
+            }).catch(function (error) {
+                console.error(error);
+            });
         }
     }
 

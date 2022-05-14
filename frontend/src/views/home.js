@@ -1,7 +1,4 @@
 import React, {useContext, useEffect, useState} from 'react';
-import Button from '@material-ui/core/Button';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -13,6 +10,9 @@ import MainContext from './../context/main-context';
 import Layout from "../hoc/Layout";
 import {movieApi} from "../utils/methods";
 import {navigate} from "../utils/services";
+import Pagination from '@material-ui/lab/Pagination';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -44,12 +44,16 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.background.paper,
         padding: theme.spacing(6),
     },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },
 }));
 
 
 export default function Home(props) {
     const classes = useStyles();
-    const {products, user, handleUpdateMainState} = useContext(MainContext);
+    const {products, user, handleUpdateMainState, count, page, keyword, loading} = useContext(MainContext);
 
     useEffect(() => {
         if (!user)
@@ -60,11 +64,16 @@ export default function Home(props) {
         fetProducts();
     }, [])
 
-    const fetProducts = () => {
-        movieApi().then(function (res) {
-            handleUpdateMainState({products: res.data.Search});
+    const fetProducts = (p) => {
+        let fPage = p || page;
+        handleUpdateMainState({loading: true});
+        movieApi(keyword, fPage).then(function (res) {
+            handleUpdateMainState({products: res.data.Search, count: res.data.totalResults, page: fPage});
         }).catch(function (error) {
             console.error(error);
+        }).finally(() => {
+            handleUpdateMainState({loading: false});
+
         });
     }
 
@@ -103,8 +112,15 @@ export default function Home(props) {
                                 </Card>
                             </Grid>
                         ))}
-                    </Grid>
+                    </Grid><br/><br/>
+                    <div className={classes.root}>
+                        <Pagination onChange={(e, value) => fetProducts(value)} page={page} count={parseInt(count/10)} color="primary" />
+                    </div>
                 </Container>
+
+            <Backdrop className={classes.backdrop} open={loading} >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </Layout>
     );
 }

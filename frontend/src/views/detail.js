@@ -5,6 +5,8 @@ import MainContext from './../context/main-context';
 import Layout from "../hoc/Layout";
 import Blog from "../blog/Blog";
 import {movieDetailApi} from "../utils/methods";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -36,13 +38,17 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.background.paper,
         padding: theme.spacing(6),
     },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },
 }));
 
 
 export default function Detail(props) {
     const [item, setItem] = useState();
     const classes = useStyles();
-    const {user} = useContext(MainContext);
+    const {user, loading, handleUpdateMainState} = useContext(MainContext);
 
     useEffect(() => {
         if (!user)
@@ -54,11 +60,15 @@ export default function Detail(props) {
     }, [])
 
     const fetProductDetail = () => {
+        handleUpdateMainState({loading: true});
         movieDetailApi(props.match.params.id).then(function (res) {
             console.log(res.data);
             setItem(res.data);
         }).catch(function (error) {
             console.error(error);
+        }).finally(() => {
+            handleUpdateMainState({loading: false});
+
         });
     }
 
@@ -68,6 +78,9 @@ export default function Detail(props) {
             <Container className={classes.cardGrid} maxWidth="md">
                <Blog item={item}/>
             </Container>
+            <Backdrop className={classes.backdrop} open={loading} >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </Layout>
     );
 }

@@ -7,6 +7,10 @@ class Index extends Component {
     state = {
         user: null,
         products: [],
+        count: 1,
+        page: 1,
+        keyword: 'sto',
+        loading: false,
     };
 
     componentWillMount() {
