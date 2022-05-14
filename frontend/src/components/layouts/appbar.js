@@ -188,7 +188,7 @@ function PrimarySearchAppBar(props) {
     }
 
     const handleAddButton = () => {
-        navigate(props, props.edit ? '/home' :'create-product')
+        navigate(props, '/home')
     }
 
     return (
@@ -227,7 +227,7 @@ function PrimarySearchAppBar(props) {
                         />
                     </div>
                     <div className={classes.grow} />
-                    <Button onClick={handleAddButton} variant="contained">{props.edit ? 'List Product' : 'Add Product'}</Button>
+                    <Button onClick={handleAddButton} variant="contained">{'List Product'}</Button>
                     <div className={classes.sectionDesktop}>
                         <IconButton
                             edge="end"

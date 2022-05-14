@@ -11,9 +11,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import MainContext from './../context/main-context';
 import Layout from "../hoc/Layout";
-import {CardActions} from "@material-ui/core";
-import axios from "axios";
-import {CONFIG} from "../config";
+import {movieApi} from "../utils/methods";
+import {navigate} from "../utils/services";
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -50,7 +49,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home(props) {
     const classes = useStyles();
-    // const [products, setProducts] = useState();
     const {products, user, handleUpdateMainState} = useContext(MainContext);
 
     useEffect(() => {
@@ -63,17 +61,11 @@ export default function Home(props) {
     }, [])
 
     const fetProducts = () => {
-        axios.get(`${CONFIG.API_BASE_URL}/product/list`)
-            .then(res => {
-                handleUpdateMainState({products: res.data.products});
-            })
-    }
-
-    const handleDelete = (id) => {
-        axios.delete(`${CONFIG.API_BASE_URL}/product/delete/${id}`)
-            .then(() => {
-                fetProducts();
-            })
+        movieApi().then(function (res) {
+            handleUpdateMainState({products: res.data.Search});
+        }).catch(function (error) {
+            console.error(error);
+        });
     }
 
     return (
@@ -93,29 +85,21 @@ export default function Home(props) {
                     {/* End hero unit */}
                     <Grid container spacing={4}>
                         {products && products.map((card) => (
-                            <Grid item key={card} xs={12} sm={6} md={4}>
+                            <Grid onClick={() => navigate(props, `detail/${card.imdbID}`)} item key={card} xs={12} sm={6} md={4}>
                                 <Card className={classes.card}>
                                     <CardMedia
                                         className={classes.cardMedia}
-                                        image={`${CONFIG.API_BASE_URL0}${card.image}`}
-                                        title={card.title}
+                                        image={card.Poster !== 'N/A' ? card.Poster : 'https://t4.ftcdn.net/jpg/04/70/29/97/360_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg'}
+                                        title={card.Title}
                                     />
                                     <CardContent className={classes.cardContent}>
                                         <Typography gutterBottom variant="h5" component="h2">
-                                            {card.title}
+                                            {card.Type} : {card.Year}
                                         </Typography>
                                         <Typography>
-                                            {card.description}
+                                            {card.Title}
                                         </Typography>
                                     </CardContent>
-                                    <CardActions>
-                                        <Button onClick={() => handleDelete(card.id)} startIcon={<DeleteIcon />} size="small" color="secondary">
-                                            Delete
-                                        </Button>
-                                        {/*<Button size="small" color="primary" startIcon={<EditIcon />}>*/}
-                                        {/*    Edit*/}
-                                        {/*</Button>*/}
-                                    </CardActions>
                                 </Card>
                             </Grid>
                         ))}
