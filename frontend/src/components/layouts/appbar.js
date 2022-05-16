@@ -236,7 +236,7 @@ function PrimarySearchAppBar(props) {
                         />
                     </div>
                     <div className={classes.grow} />
-                    <Button onClick={handleAddButton} variant="contained">{'List Product'}</Button>
+                    <Button onClick={handleAddButton} variant="contained">{'Home'}</Button>
                     <div className={classes.sectionDesktop}>
                         <IconButton
                             edge="end"
