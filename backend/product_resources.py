@@ -137,7 +137,5 @@ class CreateComment(Resource):
             return {
                 'message': f'Comment {comment} was created',
             }
-
         except:
-
             return {'message': 'Something went wrong'}, 500

@@ -46,11 +46,11 @@ class UserModel(db.Model):
         try:
             num_rows_deleted = db.session.query(cls).delete()
             db.session.commit()
-        
+
             return {'message': f'{num_rows_deleted} row(s) deleted'}
-        
+
         except:
-        
+
             return {'message': 'Something went wrong'}
 
     """
@@ -58,7 +58,7 @@ class UserModel(db.Model):
     """
     @staticmethod
     def generate_hash(password):
-        
+
         return sha256.hash(password)
 
     """
@@ -66,7 +66,7 @@ class UserModel(db.Model):
     """
     @staticmethod
     def verify_hash(password, hash_):
-        
+
         return sha256.verify(password, hash_)
 
 
@@ -76,18 +76,18 @@ class RevokedTokenModel(db.Model):
     """
 
     __tablename__ = 'revoked_tokens'
-    
+
     id = db.Column(db.Integer, primary_key=True)
-    
+
     jti = db.Column(db.String(120))
 
     """
     Save Token in DB
     """
     def add(self):
-    
+
         db.session.add(self)
-    
+
         db.session.commit()
 
     """
@@ -95,9 +95,9 @@ class RevokedTokenModel(db.Model):
     """
     @classmethod
     def is_jti_blacklisted(cls, jti):
-    
+
         query = cls.query.filter_by(jti=jti).first()
-    
+
         return bool(query)
 
 
@@ -165,7 +165,7 @@ class CommentModel(db.Model):
 
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
-    comment = db.Column(db.String(120), unique=True, nullable=False)
+    comment = db.Column(db.String(120), nullable=False)
     item_id = db.Column(db.String(120), nullable=False)
     """
     Save user details in Database
@@ -191,7 +191,7 @@ class CommentModel(db.Model):
         def to_json(x):
             return {
                 'id': x.id,
-                'rating': x.rating,
+                'comment': x.comment,
                 'item_id': x.item_id
                 }
         return {'comments': [to_json(item) for item in CommentModel.query.filter_by(item_id=item_id).all()]}

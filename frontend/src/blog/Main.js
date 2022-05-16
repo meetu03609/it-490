@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -14,6 +14,7 @@ import StarRatings from 'react-star-ratings';
 import Link from "@material-ui/core/Link";
 import axios from "axios";
 import {CONFIG} from "../config";
+import {Button, TextField} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   markdown: {
@@ -25,10 +26,22 @@ const useStyles = makeStyles((theme) => ({
 export default function Main(props) {
   const classes = useStyles();
   const { item } = props;
+  const [comment, setComment] = useState('');
 
   const createRating = (rating) => {
-      axios.post(`${CONFIG.API_BASE_URL}/rating/create`, {rating, itemId: props.itemId});
+      axios.post(`${CONFIG.API_BASE_URL}/rating/create`, {rating, itemId: props.itemId})
+          .then(() => {
+              props.fetchRating();
+          });
   };
+
+    const createComment = () => {
+        axios.post(`${CONFIG.API_BASE_URL}/comment/create`, {comment, itemId: props.itemId})
+            .then(() => {
+                props.fetchComments();
+                setComment('');
+            });
+    };
 
   return (
     <Grid item xs={12} md={8}>
@@ -52,7 +65,7 @@ export default function Main(props) {
             User Rating: {'N/A'}
         </Typography>
         <StarRatings
-            rating={item.userRating ? parseFloat(item.userRating) : 0}
+            rating={parseFloat(props.rating)}
             starRatedColor="blue"
             starDimension="40px"
             changeRating={(e) => createRating(e)}
@@ -123,71 +136,36 @@ export default function Main(props) {
             Comments
         </Typography>
         <List className={classes.root}>
-            <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                    <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                </ListItemAvatar>
-                <ListItemText
-                    primary="Brunch this weekend?"
-                    secondary={
-                        <React.Fragment>
-                            <Typography
-                                component="span"
-                                variant="body2"
-                                className={classes.inline}
-                                color="textPrimary"
-                            >
-                                Ali Connors
-                            </Typography>
-                            {" — I'll be in your neighborhood doing errands this…"}
-                        </React.Fragment>
-                    }
-                />
-            </ListItem>
-            <Divider variant="inset" component="li" />
-            <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                    <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-                </ListItemAvatar>
-                <ListItemText
-                    primary="Summer BBQ"
-                    secondary={
-                        <React.Fragment>
-                            <Typography
-                                component="span"
-                                variant="body2"
-                                className={classes.inline}
-                                color="textPrimary"
-                            >
-                                to Scott, Alex, Jennifer
-                            </Typography>
-                            {" — Wish I could come, but I'm out of town this…"}
-                        </React.Fragment>
-                    }
-                />
-            </ListItem>
-            <Divider variant="inset" component="li" />
-            <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                    <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-                </ListItemAvatar>
-                <ListItemText
-                    primary="Oui Oui"
-                    secondary={
-                        <React.Fragment>
-                            <Typography
-                                component="span"
-                                variant="body2"
-                                className={classes.inline}
-                                color="textPrimary"
-                            >
-                                Sandra Adams
-                            </Typography>
-                            {' — Do you have Paris recommendations? Have you ever…'}
-                        </React.Fragment>
-                    }
-                />
-            </ListItem>
+            {props.comments.map((item, index) => (
+                <React.Fragment key={index}>
+                    <ListItem alignItems="flex-start">
+                        <ListItemAvatar>
+                            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                        </ListItemAvatar>
+                        <ListItemText
+                            primary={'Meet'}
+                            secondary={
+                                <React.Fragment>
+                                    <Typography
+                                        component="span"
+                                        variant="body2"
+                                        className={classes.inline}
+                                        color="textPrimary"
+                                    >
+                                        Comment
+                                    </Typography>
+                                    {` — ${item.comment}`}
+                                </React.Fragment>
+                            }
+                        />
+                    </ListItem>
+                    <Divider variant="inset" component="li" />
+                </React.Fragment>
+            ))}
+            <TextField value={comment} onChange={e => setComment(e.target.value)} id="standard-basic" label="Enter Comment" />
+            <Button onClick={createComment} variant="contained" color="primary">
+                Primary
+            </Button>
         </List>
       <Divider />
     </Grid>

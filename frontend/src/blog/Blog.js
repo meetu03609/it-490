@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Blog({item, trailer, watch, itemId}) {
+export default function Blog({item, trailer, watch, itemId, rating, comments, fetchComments, fetchRating}) {
   const classes = useStyles();
 
   if (!item)
@@ -36,7 +36,7 @@ export default function Blog({item, trailer, watch, itemId}) {
           )}
 
           <Grid container spacing={5} className={classes.mainGrid}>
-            <Main itemId={itemId} watch={watch} item={item} />
+            <Main fetchRating={fetchRating} fetchComments={fetchComments} rating={rating} comments={comments} itemId={itemId} watch={watch} item={item} />
             <Sidebar
               title={'Plot'}
               description={item.Plot}

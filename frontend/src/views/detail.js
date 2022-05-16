@@ -48,13 +48,14 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function Detail(props) {
-    const [item, setItem] = useState({
-        Title: 'test'
-    });
+    const [item, setItem] = useState(null);
+    const [rating, setRating] = useState(0);
+    const [comments, setComments] = useState([]);
     const [trailer, setTrailer] = useState();
     const [watch, setWatch] = useState();
     const classes = useStyles();
     const {user, loading, handleUpdateMainState} = useContext(MainContext);
+    const itemId = props.match.params.id;
 
     useEffect(() => {
         if (!user)
@@ -66,15 +67,9 @@ export default function Detail(props) {
     }, [])
 
     const fetProductDetail = () => {
-        const itemId = props.match.params.id;
 
-        axios.get(`${CONFIG.API_BASE_URL}/rating/list?itemId=${itemId}`).then(res => {
-            console.log('testing',res);
-        })
-
-        axios.get(`${CONFIG.API_BASE_URL}/comment/list?itemId=${itemId}`).then(res => {
-            console.log('testing',res);
-        })
+        fetchComments();
+        fetchRating();
 
         handleUpdateMainState({loading: true});
         movieDetailApi(props.match.params.id).then(function (res) {
@@ -93,11 +88,27 @@ export default function Detail(props) {
         });
     }
 
+    const fetchRating = () => {
+        axios.get(`${CONFIG.API_BASE_URL}/rating/list?itemId=${itemId}`).then(res => {
+            if (res.data && res.data.ratings && res.data.ratings.length) {
+                setRating(res.data.ratings[res.data.ratings.length - 1].rating);
+            }
+        })
+    }
+
+    const fetchComments = () => {
+        axios.get(`${CONFIG.API_BASE_URL}/comment/list?itemId=${itemId}`).then(res => {
+            if (res.data && res.data.comments) {
+                setComments(res.data.comments);
+            }
+        })
+    }
+
     return (
         <Layout>
             {/* Hero unit */}
             <Container className={classes.cardGrid} maxWidth="md">
-               <Blog itemId={props.match.params.id} watch={watch} trailer={trailer} item={item}/>
+               <Blog fetchComments={fetchComments}  fetchRating={fetchRating} comments={comments} rating={rating} itemId={props.match.params.id} watch={watch} trailer={trailer} item={item}/>
             </Container>
             <Backdrop className={classes.backdrop} open={loading} >
                 <CircularProgress color="inherit" />
