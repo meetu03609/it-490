@@ -52,17 +52,17 @@ export default function Main(props) {
         <Typography variant="h6" gutterBottom>
             IMDB Rating: {item.imdbRating}
         </Typography>
-        {/*<StarRatings*/}
-        {/*    rating={parseFloat(item.imdbRating)}*/}
-        {/*    starRatedColor="blue"*/}
-        {/*    starDimension="40px"*/}
-        {/*    changeRating={() => {}}*/}
-        {/*    numberOfStars={10}*/}
-        {/*    name='rating'*/}
-        {/*    isSelectable={false}*/}
-        {/*/>*/}
+        <StarRatings
+            rating={parseFloat(item.imdbRating)}
+            starRatedColor="blue"
+            starDimension="40px"
+            changeRating={() => {}}
+            numberOfStars={10}
+            name='rating'
+            isSelectable={false}
+        />
         <Typography variant="h6" gutterBottom>
-            User Rating: {'N/A'}
+            User Rating
         </Typography>
         <StarRatings
             rating={parseFloat(props.rating)}
