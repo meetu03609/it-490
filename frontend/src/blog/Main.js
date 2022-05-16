@@ -12,6 +12,8 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import StarRatings from 'react-star-ratings';
 import Link from "@material-ui/core/Link";
+import axios from "axios";
+import {CONFIG} from "../config";
 
 const useStyles = makeStyles((theme) => ({
   markdown: {
@@ -24,6 +26,10 @@ export default function Main(props) {
   const classes = useStyles();
   const { item } = props;
 
+  const createRating = (rating) => {
+      axios.post(`${CONFIG.API_BASE_URL}/rating/create`, {rating, itemId: props.itemId});
+  };
+
   return (
     <Grid item xs={12} md={8}>
       <Typography variant="h6" gutterBottom>
@@ -33,18 +39,6 @@ export default function Main(props) {
         <Typography variant="h6" gutterBottom>
             IMDB Rating: {item.imdbRating}
         </Typography>
-        <StarRatings
-            rating={parseFloat(item.imdbRating)}
-            starRatedColor="blue"
-            starDimension="40px"
-            changeRating={() => {}}
-            numberOfStars={10}
-            name='rating'
-            isSelectable={false}
-        />
-        {/*<Typography variant="h6" gutterBottom>*/}
-        {/*    User Rating: {'N/A'}*/}
-        {/*</Typography>*/}
         {/*<StarRatings*/}
         {/*    rating={parseFloat(item.imdbRating)}*/}
         {/*    starRatedColor="blue"*/}
@@ -54,6 +48,18 @@ export default function Main(props) {
         {/*    name='rating'*/}
         {/*    isSelectable={false}*/}
         {/*/>*/}
+        <Typography variant="h6" gutterBottom>
+            User Rating: {'N/A'}
+        </Typography>
+        <StarRatings
+            rating={item.userRating ? parseFloat(item.userRating) : 0}
+            starRatedColor="blue"
+            starDimension="40px"
+            changeRating={(e) => createRating(e)}
+            numberOfStars={10}
+            name='rating'
+            isSelectable={false}
+        />
 
         <Typography variant="h6" gutterBottom>
             Watch Now

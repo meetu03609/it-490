@@ -155,3 +155,109 @@ class ProductModel(db.Model):
         except:
 
             return {'message': 'Something went wrong'}
+
+
+
+class CommentModel(db.Model):
+    """
+    Product Model Class
+    """
+
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    comment = db.Column(db.String(120), unique=True, nullable=False)
+    item_id = db.Column(db.String(120), nullable=False)
+    """
+    Save user details in Database
+    """
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+    """
+    return all the user data in json form available in DB
+    """
+    @classmethod
+    def return_all(cls, search):
+        def to_json(x):
+            return {
+                'id': x.id,
+                'comment': x.comment,
+                'item_id': x.item_id
+            }
+        return {'products': [to_json(item) for item in CommentModel.query.all()]}
+
+    @classmethod
+    def filter_by_item_id(cls, item_id):
+        def to_json(x):
+            return {
+                'id': x.id,
+                'rating': x.rating,
+                'item_id': x.item_id
+                }
+        return {'comments': [to_json(item) for item in CommentModel.query.filter_by(item_id=item_id).all()]}
+
+    """
+    Delete user data
+    """
+    @classmethod
+    def delete(cls, id):
+        try:
+            ProductModel.query.filter_by(id=id).delete()
+            db.session.commit()
+            return {'message': f'{id} row(s) deleted'}
+
+        except:
+
+            return {'message': 'Something went wrong'}
+
+
+class RattingModel(db.Model):
+    """
+    Product Model Class
+    """
+
+    __tablename__ = 'ratings'
+    id = db.Column(db.Integer, primary_key=True)
+    rating = db.Column(db.String(120), unique=True, nullable=False)
+    item_id = db.Column(db.String(120), nullable=False)
+    """
+    Save user details in Database
+    """
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def filter_by_item_id(cls, item_id):
+
+        def to_json(x):
+            return {
+                'id': x.id,
+                'rating': x.rating,
+                'item_id': x.item_id
+                }
+        return {'ratings': [to_json(item) for item in RattingModel.query.filter_by(item_id=item_id).all()]}
+
+    @classmethod
+    def return_all(cls, search):
+        def to_json(x):
+            return {
+                'id': x.id,
+                'rating': x.rating,
+                'item_id': x.item_id
+            }
+        return {'products': [to_json(item) for item in CommentModel.query.all()]}
+
+    """
+    Delete user data
+    """
+    @classmethod
+    def delete(cls, id):
+        try:
+            ProductModel.query.filter_by(id=id).delete()
+            db.session.commit()
+            return {'message': f'{id} row(s) deleted'}
+
+        except:
+
+            return {'message': 'Something went wrong'}

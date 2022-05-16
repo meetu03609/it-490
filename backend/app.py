@@ -44,6 +44,10 @@ api.add_resource(resources.UserRegistration, '/api/registration')
 api.add_resource(product_resources.ProductForm, '/api/product/create')
 
 api.add_resource(product_resources.AllProduct, '/api/product/list')
+api.add_resource(product_resources.AllComment, '/api/comment/list')
+api.add_resource(product_resources.AllRating, '/api/rating/list')
+api.add_resource(product_resources.CreateComment, '/api/comment/create')
+api.add_resource(product_resources.CreateRating, '/api/rating/create')
 
 api.add_resource(product_resources.DeleteProduct, '/api/product/delete/<int:id>')
 
