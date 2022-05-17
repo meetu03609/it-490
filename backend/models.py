@@ -196,6 +196,7 @@ class CommentModel(db.Model):
                 }
         return {'comments': [to_json(item) for item in CommentModel.query.filter_by(item_id=item_id).all()]}
 
+
     """
     Delete user data
     """
