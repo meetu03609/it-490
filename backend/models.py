@@ -206,7 +206,6 @@ class CommentModel(db.Model):
             ProductModel.query.filter_by(id=id).delete()
             db.session.commit()
             return {'message': f'{id} row(s) deleted'}
-
         except:
 
             return {'message': 'Something went wrong'}
