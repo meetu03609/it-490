@@ -207,7 +207,6 @@ class CommentModel(db.Model):
             db.session.commit()
             return {'message': f'{id} row(s) deleted'}
         except:
-
             return {'message': 'Something went wrong'}
 
 
