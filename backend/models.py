@@ -215,9 +215,7 @@ class RattingModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     rating = db.Column(db.String(120), unique=True, nullable=False)
     item_id = db.Column(db.String(120), nullable=False)
-    """
-    Save user details in Database
-    """
+
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
