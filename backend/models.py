@@ -224,7 +224,6 @@ class RattingModel(db.Model):
 
     @classmethod
     def filter_by_item_id(cls, item_id):
-
         def to_json(x):
             return {
                 'id': x.id,
