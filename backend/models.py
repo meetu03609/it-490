@@ -171,9 +171,6 @@ class CommentModel(db.Model):
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
-    """
-    return all the user data in json form available in DB
-    """
     @classmethod
     def return_all(cls, search):
         def to_json(x):
