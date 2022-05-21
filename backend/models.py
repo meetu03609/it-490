@@ -142,9 +142,6 @@ class ProductModel(db.Model):
         else:
             return {'products': [to_json(product) for product in ProductModel.query.all()]}
 
-    """
-    Delete user data
-    """
     @classmethod
     def delete(cls, id):
         try:
