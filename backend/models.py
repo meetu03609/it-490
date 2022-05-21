@@ -159,9 +159,7 @@ class ProductModel(db.Model):
 
 
 class CommentModel(db.Model):
-    """
-    Product Model Class
-    """
+
 
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
